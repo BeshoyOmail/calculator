@@ -1,209 +1,253 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<!DOCTYPE html><!DOCTYPE html>
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حاسبة النسب - بشوي</title>
-    <!-- Load Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Percentage Calculator - Final Version</title>
+    
+    <!-- Google Fonts for aesthetics -->
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    
     <style>
-        /* Custom styles for mobile-first app feel */
+        /* CSS is purely inline for local environment stability */
         :root {
-            --discount-color: #ef4444; /* Red for discount */
-            --markup-color: #059669; /* Green for markup */
-            --primary-bg: #f0f4f8; /* Light blue-gray background */
-            --main-brand-color: #4f46e5; /* Indigo */
+            --discount-color: #ef4444; 
+            --markup-color: #059669;
+            --primary-bg: #f0f4f8;
+            --main-brand-color: #4f46e5;
+            --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
         body {
             font-family: 'Cairo', sans-serif;
             background-color: var(--primary-bg); 
             min-height: 100vh;
-            padding-top: 64px; /* Space for the fixed header */
+            padding-top: 64px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 16px;
+            box-sizing: border-box;
         }
         .card {
             background-color: #ffffff;
             border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-strong);
+            padding: 32px;
+            box-sizing: border-box;
             width: 100%;
-        }
-        /* Mobile input optimization */
-        .input-field {
-            padding: 16px; /* Increased padding for better touch targets */
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            text-align: center;
-            font-size: 1.5rem; /* Larger font size for mobile readability */
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-        .input-field:focus {
-            border-color: var(--main-brand-color); 
-            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.2);
-            outline: none;
-        }
-        .result-box {
-            background-color: #f1f5f9; /* Light background for results */
-            border: 1px solid #cbd5e1;
-            transition: transform 0.3s;
         }
         .app-header {
             position: fixed;
             top: 0;
-            right: 0;
             left: 0;
+            right: 0;
             z-index: 10;
+            background-color: #ffffff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .logo-box {
+            background: linear-gradient(to left, #4f46e5, #8b5cf6);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 4px 8px;
+            font-family: 'Pacifico', cursive;
+            font-weight: bold;
+            font-size: 1.125rem;
+        }
+        .input-group { margin-bottom: 24px; }
+        .label {
+            display: block;
+            font-size: 1.125rem;
+            font-weight: bold;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+        .input-field {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.5rem;
+            box-sizing: border-box;
+        }
+        .percent-symbol {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.875rem;
+            font-weight: 900;
+            color: #9ca3af;
+        }
+        .results-section {
+            padding-top: 16px;
+            border-top: 1px solid #f3f4f6;
+            margin-top: 16px;
+        }
+        .result-box {
+            background-color: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .final-price-box {
+            background-color: #e0f2fe;
+            border: 2px solid #93c5fd;
+        }
+        .final-price-value {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #1d4ed8;
+            direction: ltr;
         }
     </style>
 </head>
-<body class="flex flex-col items-center">
+<body>
 
     <!-- Fixed App Header (Logo) -->
-    <header class="app-header bg-white shadow-md p-4 flex justify-between items-center border-b border-gray-100">
-        <h1 class="text-2xl font-black text-gray-900">
-            الحاسبة الذكية
+    <header class="app-header">
+        <h1 style="font-size: 1.5rem; font-weight: 900; color: #1f2937;">
+            Smart Calculator
         </h1>
-        <div class="p-1 bg-gradient-to-l from-indigo-600 to-purple-700 text-white rounded-lg shadow-lg">
-            <span class="text-lg font-bold" style="font-family: 'Pacifico', cursive;">Eng: Beshoy Omail</span>
+        <div class="logo-box">
+            <span>Eng: Beshoy Omail</span>
         </div>
     </header>
-
-    <div class="w-full max-w-xl p-4 space-y-6">
-        <div class="card p-6 md:p-8 space-y-8">
+
+<div class="container">
+        <div class="card">
             
-            <!-- Title Subtext -->
-            <p class="text-center text-gray-500 text-lg font-medium pt-2 border-b pb-4 border-gray-100">
-                لحساب الخصومات أو الزيادات المئوية بسرعة
+            <p style="text-align: center; color: #6b7280; font-size: 1.125rem; font-weight: 500; padding-bottom: 16px; border-bottom: 1px solid #f3f4f6;">
+                Quickly calculate discounts or percentage increases
             </p>
             
-            <!-- Input Section -->
-            <div class="space-y-6">
+            <div style="margin-top: 32px;">
                 <!-- Original Price -->
-                <div class="relative">
-                    <label for="originalPrice" class="block text-lg font-bold text-gray-700 mb-2">
-                        السعر الأصلي للمنتج
-                    </label>
-                    <input type="number" id="originalPrice" placeholder="أدخل سعر المنتج الأصلي" value="1000" min="0" oninput="calculatePercentage()" 
-                           class="input-field w-full" dir="ltr">
+                <div class="input-group">
+                    <label for="originalPrice" class="label">Original Product Price</label>
+                    <input type="number" id="originalPrice" placeholder="Enter the original product price" value="1000" min="0" oninput="calculatePercentage()" 
+                           class="input-field" dir="ltr">
                 </div>
 
                 <!-- Percentage Input -->
-                <div class="relative">
-                    <label for="percentage" class="block text-lg font-bold text-gray-700 mb-2">
-                        النسبة المئوية (%)
-                    </label>
-                    <input type="number" id="percentage" placeholder="أدخل النسبة (مثلاً 70)" value="70" min="0" oninput="calculatePercentage()"
-
-class="input-field w-full pr-12" dir="ltr">
-                    <span class="absolute left-3 top-1/2 mt-3 transform -translate-y-1/2 text-3xl font-black text-gray-500">%</span>
+                <div class="input-group percent-wrapper">
+                    <label for="percentage" class="label">Percentage (%)</label>
+                    <input type="number" id="percentage" placeholder="Enter the percentage (e.g., 70)" value="70" min="0" oninput="calculatePercentage()" 
+                           class="input-field" style="padding-right: 48px;" dir="ltr">
+                    <span class="percent-symbol" style="left: 12px;">%</span>
                 </div>
                 
                 <!-- Percentage Type Toggle -->
-                <div class="relative">
-                    <label for="calcType" class="block text-lg font-bold text-gray-700 mb-2">نوع الحساب:</label>
-                    <select id="calcType" onchange="calculatePercentage()" class="input-field w-full text-lg bg-white focus:border-blue-500 appearance-none">
-                        <option value="discount">خصم (تخفيض السعر)</option>
-                        <option value="markup">زيادة (ضريبة/ربح)</option>
+                <div class="input-group">
+                    <label for="calcType" class="label">Calculation Type:</label>
+                    <select id="calcType" onchange="calculatePercentage()" class="input-field" style="font-size: 1.25rem;">
+                        <option value="discount">Discount (Price Reduction)</option>
+                        <option value="markup">Markup (Tax/Profit)</option>
                     </select>
                 </div>
             </div>
 
             <!-- Result Section -->
-            <div id="results" class="space-y-4 pt-4 border-t border-gray-100">
+            <div id="results" class="results-section">
                 
-                <h2 class="text-2xl font-bold text-gray-800 text-center">النتائج</h2>
+                <h2 class="result-title" style="font-size: 1.5rem; font-weight: bold; color: #1f2937; text-align: center; margin-bottom: 16px;">Results</h2>
 
                 <!-- Discount/Markup Amount -->
-                <div class="result-box p-5 rounded-xl shadow-inner text-center">
-                    <p id="amount-label" class="text-base font-semibold text-gray-600 mb-1">قيمة الخصم</p>
-                    <p id="calculatedAmount" class="text-4xl font-extrabold text-red-600" dir="ltr">0.00</p>
+                <div class="result-box">
+                    <p id="amount-label" style="font-size: 1rem; font-weight: 600; color: #4b5563; margin-bottom: 4px;">Discount Value</p>
+                    <p id="calculatedAmount" style="font-weight: 800; font-size: 2.25rem; color: var(--discount-color); direction: ltr;">0.00</p>
                 </div>
 
                 <!-- Final Price -->
-                <div class="result-box bg-blue-100 p-6 rounded-xl shadow-md text-center border-2 border-blue-300">
-                    <p class="text-xl font-extrabold text-blue-800 mb-2">السعر النهائي</p>
-                    <p id="finalPrice" class="text-5xl font-black text-blue-700" dir="ltr">0.00</p>
+                <div class="result-box final-price-box">
+                    <p style="font-size: 1.25rem; font-weight: 700; color: #1d4ed8; margin-bottom: 4px;">Final Price</p>
+                    <p id="finalPrice" class="final-price-value">0.00</p>
                 </div>
                 
-                <p class="text-center text-xs text-gray-400 pt-2">
-                    *تحديث فوري لجميع النتائج عند إدخال البيانات.
+                <p style="text-align: center; font-size: 0.75rem; color: #9ca3af; padding-top: 8px;">
+                    *Instant update of all results upon data entry.
                 </p>
             </div>
         </div>
     </div>
 
     <script>
-        // دالة مساعدة لتنسيق الأرقام مع منزلتين عشريتين
-        const formatCurrency = (num) => {
-            // تنسيق الرقم مع فاصل الآلاف والاحتفاظ بمنزلتين عشريتين
-            return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        };
-
-        // الدالة الرئيسية للحساب
-        function calculatePercentage() {
-            // جلب القيم من حقول الإدخال
-            const originalPriceInput = document.getElementById('originalPrice');
-            const percentageInput = document.getElementById('percentage');
-            const calcType = document.getElementById('calcType').value;
+        // Ensure all JS runs after the DOM content is fully loaded.
+        document.addEventListener('DOMContentLoaded', function() {
             
-            let originalPrice = parseFloat(originalPriceInput.value) || 0;
-            let percentage = parseFloat(percentageInput.value) || 0;
+            // Helper function to format numbers with two decimal places (ES5)
+            var formatCurrency = function (num) {
+                // Ensure number is float, then fix to 2 decimals, then add thousand commas
+                return parseFloat(num).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            };
 
-            // تحديد عناصر عرض النتائج
-            const calculatedAmountElement = document.getElementById('calculatedAmount');
-            const finalPriceElement = document.getElementById('finalPrice');
-            const amountLabel = document.getElementById('amount-label');
+            // Main function for calculation (ES5)
+            window.calculatePercentage = function() { // Attach to window object for global access
+                console.log("Calculation function is executing...");
 
-            // --- التحقق من المدخلات ---
-            if (originalPrice < 0) originalPrice = 0;
-            if (percentage < 0) percentage = 0;
-
-            // إذا كان السعر الأصلي صفراً
-            if (originalPrice === 0) {
-                calculatedAmountElement.textContent = formatCurrency(0);
-                finalPriceElement.textContent = formatCurrency(0);
-                return;
-            }
-
-            // --- عملية الحساب ---
-            
-            // 1. حساب قيمة النسبة
-            const calculatedAmount = originalPrice * (percentage / 100);
-            let finalPrice = 0;
-            
-            // 2. تطبيق النسبة بناءً على النوع (خصم أو زيادة)
-            if (calcType === 'discount') {
-                // الخصم: السعر الأصلي - قيمة الخصم
-
-finalPrice = originalPrice - calculatedAmount;
-                // التأكد من أن السعر لا ينخفض عن الصفر
-                if (finalPrice < 0) finalPrice = 0;
+                // Get values
+var originalPrice = parseFloat(document.getElementById('originalPrice').value) || 0;
+                var percentage = parseFloat(document.getElementById('percentage').value) || 0;
+                var calcType = document.getElementById('calcType').value;
                 
-                // تحديث تسمية النتيجة واللون
-                amountLabel.textContent = 'قيمة الخصم';
-                calculatedAmountElement.style.color = 'var(--discount-color)'; // Red
-                
-            } else { // calcType === 'markup' (زيادة/ضريبة)
-                // الزيادة: السعر الأصلي + قيمة الزيادة
-                finalPrice = originalPrice + calculatedAmount;
-                
-                // تحديث تسمية النتيجة واللون
-                amountLabel.textContent = 'قيمة الزيادة';
-                calculatedAmountElement.style.color = 'var(--markup-color)'; // Green
-            }
+                // Define elements
+                var calculatedAmountElement = document.getElementById('calculatedAmount');
+                var finalPriceElement = document.getElementById('finalPrice');
+                var amountLabel = document.getElementById('amount-label');
 
-            // --- عرض النتائج ---
-            
-            // عرض قيمة الخصم/الزيادة
-            calculatedAmountElement.textContent = formatCurrency(calculatedAmount);
-            
-            // عرض السعر النهائي
-            finalPriceElement.textContent = formatCurrency(finalPrice);
-        }
+                // Input Validation
+                if (originalPrice < 0) originalPrice = 0;
+                if (percentage < 0) percentage = 0;
 
-        // تشغيل الدالة عند تحميل الصفحة لعرض النتائج الافتراضية
-        window.onload = calculatePercentage;
+                if (originalPrice === 0) {
+                    calculatedAmountElement.textContent = formatCurrency(0);
+                    finalPriceElement.textContent = formatCurrency(0);
+                    return;
+                }
+
+                // Calculation
+                var calculatedAmount = originalPrice * (percentage / 100);
+                var finalPrice = 0;
+                
+                if (calcType === 'discount') {
+                    finalPrice = originalPrice - calculatedAmount;
+                    if (finalPrice < 0) finalPrice = 0;
+                    
+                    amountLabel.textContent = 'Discount Value';
+                    calculatedAmountElement.style.color = 'var(--discount-color)'; // Red
+                    
+                } else { // markup
+                    finalPrice = originalPrice + calculatedAmount;
+                    
+                    amountLabel.textContent = 'Markup Value';
+                    calculatedAmountElement.style.color = 'var(--markup-color)'; // Green
+                }
+
+                // Display Results
+                calculatedAmountElement.textContent = formatCurrency(calculatedAmount);
+                finalPriceElement.textContent = formatCurrency(finalPrice);
+                
+                console.log("Result: Amount=" + calculatedAmount.toFixed(2) + ", Final=" + finalPrice.toFixed(2));
+            };
+            
+            // Initial run after DOM is ready
+            calculatePercentage();
+        });
     </script>
 
 </body>
-
 </html>
